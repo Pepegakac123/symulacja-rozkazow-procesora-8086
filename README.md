@@ -1,0 +1,1 @@
+# symulacja-rozkazow-procesora-8086
