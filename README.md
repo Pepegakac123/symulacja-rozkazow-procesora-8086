@@ -47,7 +47,16 @@ W adresowaniu bezpośrednim procesor 8086 odwołuje się do konkretnego adresu w
 ```Assembly
 MOV AX, [0050h]
 ```
-- Tutaj `ax` zostaje załadowany wartością z pamięci znajdującej sie pod adresem `DS:0050h`
+- Tutaj `AX` zostaje załadowany wartością z pamięci znajdującej sie pod adresem `DS:0050h`
 - Jeśli `DS = 2000h`, pełny adres to `20000h + 0050h = 20050h`
 - `AX` pobiera zawartość z tego adresu
+
+### Adresowanie Rejestrowe
+W adresowaniu rejestrowym operujemy wyłącznie na rejestrach, co oznacza że dane nie są pobierane ani zapisywane do pamięci, ale przetwarzane bezpośrednio w rejestrach procesora.
+```Assembly
+MOV AX, BX
+```
+- W tym przypadku `AX` przyjmuje wartość `BX`
+- Jeśli `BX = 1234h`, to po wykonaniu `AX = 1234h`
+- Ta operacja jest szybka, poniewaz odbywa się wyłącznie na rejestrach bez dostępu do pamięci
 
