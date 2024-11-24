@@ -2,6 +2,13 @@ export type Operation = "MOV" | "XCHG";
 export type Register = "AX" | "BX" | "CX" | "DX";
 export type RegisterState = Record<Register, string>;
 
+export type MemoryState = Record<string, string>;
+
+export interface MemoryAddressing {
+	baseRegister: string;
+	offset: string;
+}
+
 export interface RegisterDisplayProps {
 	registers: RegisterState;
 }
@@ -30,9 +37,13 @@ export interface ControlPanelProps {
 	destReg: Register | "";
 	inputValue: string;
 	error: string;
+	memoryAddressing?: MemoryAddressing; // Nowe pole
+	isMemoryOperation: boolean; 
 	onOperationChange: (operation: Operation) => void;
 	onSourceRegChange: (reg: Register) => void;
 	onDestRegChange: (reg: Register) => void;
 	onInputChange: (value: string) => void;
+	onMemoryAddressingChange: (addressing: MemoryAddressing) => void; // Nowa funkcja
+	onToggleMemoryOperation: () => void;
 	onExecute: () => void;
 }
