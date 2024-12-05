@@ -22,7 +22,12 @@ export type OperationDirection = "toMemory" | "fromMemory";
 
 export interface Operation {
 	id: string;
-	command: string;
+	operation: string; // np. MOV, XCHG
+	register?: string; // np. AX, BX
+	secondRegister?: string; // dla XCHG
+	value?: string; // wartość hex
+	pointer?: string; // dla operacji pamięciowych
+	type: string; // RANDOM, PRZYPISZ, XCHG, MOV, itp.
 	timestamp: number;
 }
 

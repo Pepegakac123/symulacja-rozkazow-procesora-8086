@@ -1,5 +1,14 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Registers } from "@/types";
+
+const generateRandomHex = () => {
+	return Array(4)
+		.fill(0)
+		.map(() => Math.floor(Math.random() * 16).toString(16))
+		.join("")
+		.toUpperCase();
+};
+
 const initialRegisters: Registers = {
 	ax: { value: "0000", label: "AX" },
 	bx: { value: "0000", label: "BX" },
@@ -22,11 +31,7 @@ export const registersSlice = createSlice({
 		setRandomValues: (state) => {
 			// biome-ignore lint/complexity/noForEach: <explanation>
 			Object.keys(state).forEach((reg) => {
-				state[reg as keyof Registers].value = Array(4)
-					.fill(0)
-					.map(() => Math.floor(Math.random() * 16).toString(16))
-					.join("")
-					.toUpperCase();
+				state[reg as keyof Registers].value = generateRandomHex();
 			});
 		},
 		movRegisterToRegister: (
@@ -57,3 +62,12 @@ export const registersSlice = createSlice({
 		},
 	},
 });
+
+export const generateRandomValues = () => {
+	return {
+		ax: generateRandomHex(),
+		bx: generateRandomHex(),
+		cx: generateRandomHex(),
+		dx: generateRandomHex(),
+	};
+};

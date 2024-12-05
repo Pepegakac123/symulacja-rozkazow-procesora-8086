@@ -14,11 +14,14 @@ export const operationsSlice = createSlice({
 	name: "operations",
 	initialState,
 	reducers: {
-		addOperation: (state, action: PayloadAction<string>) => {
+		addOperation: (
+			state,
+			action: PayloadAction<Omit<Operation, "id" | "timestamp">>,
+		) => {
 			state.operations.unshift({
 				id: uuidv4(),
-				command: action.payload,
 				timestamp: Date.now(),
+				...action.payload,
 			});
 		},
 		clearOperations: () => initialState,

@@ -4,6 +4,7 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { clearOperations } from "../store/slices/operationsSlice";
+import type { Operation } from "@/types";
 
 export const OperationHistory: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -11,6 +12,24 @@ export const OperationHistory: React.FC = () => {
 
 	const handleClear = () => {
 		dispatch(clearOperations());
+	};
+
+	const formatOperation = (op: Operation): string => {
+		switch (op.type) {
+			case "RANDOM":
+				return `${op.operation} ${op.register}, ${op.value}                     ${op.type}`;
+			case "PRZYPISZ":
+				return `${op.operation} ${op.register}, ${op.value}                     ${op.type}`;
+			case "XCHG":
+				return `${op.operation} ${op.register}, ${op.secondRegister}                              ${op.type}`;
+			case "MOV":
+				if (op.pointer) {
+					return `${op.operation} [${op.pointer}], ${op.register}                      ${op.type}`;
+				}
+				return `${op.operation} ${op.register}, ${op.secondRegister}                               ${op.type}`;
+			default:
+				return "";
+		}
 	};
 
 	return (
@@ -25,7 +44,7 @@ export const OperationHistory: React.FC = () => {
 				<div className="h-48 overflow-y-auto border rounded p-2">
 					{operations.map((operation) => (
 						<div key={operation.id} className="text-sm font-mono">
-							{operation.command}
+							{formatOperation(operation)}
 						</div>
 					))}
 				</div>

@@ -1,4 +1,5 @@
 import type React from "react";
+import { useMemo } from "react";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { isValidHexValue } from "../utils/validation";
-import { registersSlice } from "../store/slices/registersSlice";
+import {
+	generateRandomValues,
+	registersSlice,
+} from "../store/slices/registersSlice";
 import { addOperation } from "../store/slices/operationsSlice";
 import { setSelectedFromReg, setSelectedToReg } from "../store/slices/uiSlice";
 
@@ -23,6 +27,13 @@ export const Registers: React.FC = () => {
 	const selectedFromReg = useAppSelector((state) => state.ui.selectedFromReg);
 	const selectedToReg = useAppSelector((state) => state.ui.selectedToReg);
 
+	// Sprawdzanie poprawności wszystkich wartości
+	const areAllValuesValid = useMemo(() => {
+		return Object.values(registers).every(
+			({ value }) => isValidHexValue(value) && value.length === 4,
+		);
+	}, [registers]);
+
 	const handleRegisterChange = (
 		register: keyof typeof registers,
 		value: string,
@@ -30,45 +41,94 @@ export const Registers: React.FC = () => {
 		if (isValidHexValue(value)) {
 			dispatch(registersSlice.actions.updateRegister({ register, value }));
 			dispatch(
-				addOperation(`MOV ${register.toUpperCase()}, ${value.toUpperCase()}`),
+				addOperation({
+					operation: "MOV",
+					register: register.toUpperCase(),
+					value: value.toUpperCase(),
+					type: "PRZYPISZ",
+				}),
 			);
 		}
 	};
 
 	const handleRandom = () => {
+		const randomValues = generateRandomValues();
 		dispatch(registersSlice.actions.setRandomValues());
-		dispatch(addOperation("RANDOM values generated"));
+
+		// biome-ignore lint/complexity/noForEach: <explanation>
+		Object.entries(randomValues).forEach(([reg, value]) => {
+			dispatch(
+				addOperation({
+					operation: "MOV",
+					register: reg.toUpperCase(),
+					value: value,
+					type: "RANDOM",
+				}),
+			);
+		});
 	};
 
 	const handleReset = () => {
 		dispatch(registersSlice.actions.resetRegisters());
-		dispatch(addOperation("RESET registers"));
+		// biome-ignore lint/complexity/noForEach: <explanation>
+		Object.keys(registers).forEach((reg) => {
+			dispatch(
+				addOperation({
+					operation: "MOV",
+					register: reg.toUpperCase(),
+					value: "0000",
+					type: "RESET",
+				}),
+			);
+		});
 	};
 
 	const handleMOV = () => {
+		if (!areAllValuesValid) return;
+
+		const fromReg = selectedFromReg.toLowerCase() as keyof typeof registers;
+		const toReg = selectedToReg.toLowerCase() as keyof typeof registers;
+
 		dispatch(
 			registersSlice.actions.movRegisterToRegister({
-				from: selectedFromReg.toLowerCase() as keyof typeof registers,
-				to: selectedToReg.toLowerCase() as keyof typeof registers,
+				from: fromReg,
+				to: toReg,
 			}),
 		);
-		dispatch(addOperation(`MOV ${selectedToReg}, ${selectedFromReg}`));
+
+		dispatch(
+			addOperation({
+				operation: "MOV",
+				register: selectedToReg,
+				secondRegister: selectedFromReg,
+				value: registers[fromReg].value,
+				type: "MOV",
+			}),
+		);
 	};
 
 	const handleXCHG = () => {
+		if (!areAllValuesValid) return;
+
 		dispatch(
 			registersSlice.actions.xchgRegisters({
 				first: selectedFromReg.toLowerCase() as keyof typeof registers,
 				second: selectedToReg.toLowerCase() as keyof typeof registers,
 			}),
 		);
-		dispatch(addOperation(`XCHG ${selectedToReg}, ${selectedFromReg}`));
+
+		dispatch(
+			addOperation({
+				operation: "XCHG",
+				register: selectedToReg,
+				secondRegister: selectedFromReg,
+				type: "XCHG",
+			}),
+		);
 	};
 
 	const handleFromRegChange = (value: string) => {
 		dispatch(setSelectedFromReg(value));
-		// If the newly selected 'from' register is the same as the 'to' register,
-		// update the 'to' register to a different value
 		if (value === selectedToReg) {
 			const otherRegs = Object.values(registers)
 				.map((reg) => reg.label)
@@ -81,8 +141,6 @@ export const Registers: React.FC = () => {
 
 	const handleToRegChange = (value: string) => {
 		dispatch(setSelectedToReg(value));
-		// If the newly selected 'to' register is the same as the 'from' register,
-		// update the 'from' register to a different value
 		if (value === selectedFromReg) {
 			const otherRegs = Object.values(registers)
 				.map((reg) => reg.label)

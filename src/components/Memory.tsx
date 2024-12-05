@@ -69,6 +69,18 @@ export const Memory: React.FC = () => {
 		return address & 0xffff;
 	};
 
+	const getAddressingString = () => {
+		const disp = addressRegisters.disp.value;
+		switch (addressingMode) {
+			case "indexing":
+				return `SI+${disp}`;
+			case "base":
+				return `BP+${disp}`;
+			case "index-base":
+				return `SI+BP+${disp}`;
+		}
+	};
+
 	const handleMOV = () => {
 		const effectiveAddress = calculateEffectiveAddress();
 		const selectedRegister =
@@ -82,7 +94,15 @@ export const Memory: React.FC = () => {
 					value: value,
 				}),
 			);
-			dispatch(addOperation(`MOV [${getAddressingString()}], ${selectedReg}`));
+			dispatch(
+				addOperation({
+					operation: "MOV",
+					register: selectedReg,
+					pointer: getAddressingString(),
+					value: value,
+					type: "MOV_TO_MEMORY",
+				}),
+			);
 		} else {
 			const value = memory.cells[effectiveAddress];
 			dispatch(
@@ -91,7 +111,15 @@ export const Memory: React.FC = () => {
 					value: value,
 				}),
 			);
-			dispatch(addOperation(`MOV ${selectedReg}, [${getAddressingString()}]`));
+			dispatch(
+				addOperation({
+					operation: "MOV",
+					register: selectedReg,
+					pointer: getAddressingString(),
+					value: value,
+					type: "MOV_FROM_MEMORY",
+				}),
+			);
 		}
 	};
 
@@ -116,19 +144,15 @@ export const Memory: React.FC = () => {
 			}),
 		);
 
-		dispatch(addOperation(`XCHG ${selectedReg}, [${getAddressingString()}]`));
-	};
-
-	const getAddressingString = () => {
-		const disp = addressRegisters.disp.value;
-		switch (addressingMode) {
-			case "indexing":
-				return `SI+${disp}`;
-			case "base":
-				return `BP+${disp}`;
-			case "index-base":
-				return `SI+BP+${disp}`;
-		}
+		dispatch(
+			addOperation({
+				operation: "XCHG",
+				register: selectedReg,
+				pointer: getAddressingString(),
+				value: memValue,
+				type: "XCHG_MEMORY",
+			}),
+		);
 	};
 
 	return (
