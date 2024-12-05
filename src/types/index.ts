@@ -1,38 +1,51 @@
-export type Operation = "MOV" | "XCHG";
-export type Register = "AX" | "BX" | "CX" | "DX";
-export type RegisterState = Record<Register, string>;
-
-export interface RegisterDisplayProps {
-	registers: RegisterState;
-}
-
-export interface OperationSelectorProps {
-	selectedOperation: Operation;
-	onOperationChange: (operation: Operation) => void;
-}
-
-export interface RegisterSelectorProps {
-	value: Register | "";
-	onChange: (value: Register) => void;
-	placeholder: string;
-	disabled?: boolean;
-}
-
-export interface HexInputProps {
+export interface Register {
 	value: string;
-	onChange: (value: string) => void;
-	error?: string;
+	label: string;
 }
 
-export interface ControlPanelProps {
-	selectedOperation: Operation;
-	sourceReg: Register | "";
-	destReg: Register | "";
-	inputValue: string;
-	error: string;
-	onOperationChange: (operation: Operation) => void;
-	onSourceRegChange: (reg: Register) => void;
-	onDestRegChange: (reg: Register) => void;
-	onInputChange: (value: string) => void;
-	onExecute: () => void;
+export interface Registers {
+	ax: Register;
+	bx: Register;
+	cx: Register;
+	dx: Register;
+}
+
+export interface AddressRegisters {
+	si: Register;
+	di: Register;
+	bp: Register;
+	disp: Register;
+}
+
+export type AddressingMode = "indexing" | "base" | "index-base";
+export type OperationDirection = "toMemory" | "fromMemory";
+
+export interface Operation {
+	id: string;
+	command: string;
+	timestamp: number;
+}
+
+export interface Memory {
+	cells: string[];
+	displayedCells: { address: number; value: string }[];
+}
+
+export interface Stack {
+	values: string[];
+	pointer: number;
+}
+
+export interface AppState {
+	registers: Registers;
+	addressRegisters: AddressRegisters;
+	memory: Memory;
+	stack: Stack;
+	operations: Operation[];
+	ui: {
+		selectedFromReg: string;
+		selectedToReg: string;
+		addressingMode: AddressingMode;
+		direction: OperationDirection;
+	};
 }
