@@ -9,6 +9,15 @@ const generateRandomHex = () => {
 		.toUpperCase();
 };
 
+export const generateRandomValues = () => {
+	return {
+		ax: generateRandomHex(),
+		bx: generateRandomHex(),
+		cx: generateRandomHex(),
+		dx: generateRandomHex(),
+	};
+};
+
 const initialRegisters: Registers = {
 	ax: { value: "0000", label: "AX" },
 	bx: { value: "0000", label: "BX" },
@@ -28,10 +37,15 @@ export const registersSlice = createSlice({
 			state[register].value = value.toUpperCase();
 		},
 		resetRegisters: () => initialRegisters,
-		setRandomValues: (state) => {
+		setRandomValues: (
+			state,
+			action: PayloadAction<ReturnType<typeof generateRandomValues>>,
+		) => {
+			const randomValues = action.payload;
 			// biome-ignore lint/complexity/noForEach: <explanation>
-			Object.keys(state).forEach((reg) => {
-				state[reg as keyof Registers].value = generateRandomHex();
+			Object.keys(randomValues).forEach((reg) => {
+				state[reg as keyof Registers].value =
+					randomValues[reg as keyof typeof randomValues];
 			});
 		},
 		movRegisterToRegister: (
@@ -62,12 +76,3 @@ export const registersSlice = createSlice({
 		},
 	},
 });
-
-export const generateRandomValues = () => {
-	return {
-		ax: generateRandomHex(),
-		bx: generateRandomHex(),
-		cx: generateRandomHex(),
-		dx: generateRandomHex(),
-	};
-};

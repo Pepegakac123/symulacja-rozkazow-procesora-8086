@@ -10,14 +10,25 @@ export const memorySlice = createSlice({
 	initialState: initialMemory,
 	reducers: {
 		writeToMemory: (
-			state,
-			action: PayloadAction<{ address: number; value: string }>,
+		  state,
+		  action: PayloadAction<{
+			address: number;
+			value: string;
+			calculation?: {
+			  addressCalculation: string;
+			  valueSource: string;
+			};
+		  }>,
 		) => {
-			const { address, value } = action.payload;
-			state.cells[address] = value;
-			state.displayedCells = state.cells
-				.map((value, index) => ({ address: index, value }))
-				.filter((cell) => cell.value !== "00");
+		  const { address, value, calculation } = action.payload;
+		  state.cells[address] = value;
+		  state.displayedCells = state.cells
+			.map((value, index) => ({
+			  address: index,
+			  value,
+			  calculation: index === address ? calculation : undefined,
+			}))
+			.filter((cell) => cell.value !== "00");
 		},
 		resetMemory: () => initialMemory,
 	},

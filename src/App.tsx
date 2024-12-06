@@ -2,10 +2,11 @@ import React from "react";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { Registers } from "@/components/Registers";
-import { Memory } from "@/components/Memory";
 import { Stack } from "@/components/Stack";
 import { OperationHistory } from "@/components/OperationHistory";
-
+import { AddressRegisters } from "./components/AdressRegisters";
+import { MemoryOperations } from "./components/MemoryOperations";
+import { Toaster } from "@/components/ui/toaster";
 export default function App() {
 	return (
 		<Provider store={store}>
@@ -17,15 +18,17 @@ export default function App() {
 					<p className="text-right text-gray-600">Kacper Adamczyk</p>
 				</header>
 
-				<div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
+				<div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-4">
 					<Registers />
-					<Memory />
+					<AddressRegisters />
+					<MemoryOperations />
 					<div className="space-y-4">
 						<Stack />
 						<OperationHistory />
 					</div>
 				</div>
 			</div>
+			<Toaster />
 		</Provider>
 	);
 }

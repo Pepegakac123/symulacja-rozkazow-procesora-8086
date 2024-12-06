@@ -6,6 +6,7 @@ interface UIState {
 	selectedToReg: string;
 	addressingMode: AddressingMode;
 	direction: OperationDirection;
+	selectedBaseReg: string; // Dodane
 }
 
 const initialState: UIState = {
@@ -13,6 +14,7 @@ const initialState: UIState = {
 	selectedToReg: "BX",
 	addressingMode: "indexing",
 	direction: "toMemory",
+	selectedBaseReg: "", // Dodane
 };
 
 export const uiSlice = createSlice({
@@ -31,6 +33,9 @@ export const uiSlice = createSlice({
 		setDirection: (state, action: PayloadAction<OperationDirection>) => {
 			state.direction = action.payload;
 		},
+		setSelectedBaseReg: (state, action: PayloadAction<string>) => {
+			state.selectedBaseReg = action.payload;
+		},
 	},
 });
 
@@ -39,4 +44,5 @@ export const {
 	setSelectedToReg,
 	setAddressingMode,
 	setDirection,
+	setSelectedBaseReg,
 } = uiSlice.actions;

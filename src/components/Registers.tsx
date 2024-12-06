@@ -53,7 +53,7 @@ export const Registers: React.FC = () => {
 
 	const handleRandom = () => {
 		const randomValues = generateRandomValues();
-		dispatch(registersSlice.actions.setRandomValues());
+		dispatch(registersSlice.actions.setRandomValues(randomValues));
 
 		// biome-ignore lint/complexity/noForEach: <explanation>
 		Object.entries(randomValues).forEach(([reg, value]) => {

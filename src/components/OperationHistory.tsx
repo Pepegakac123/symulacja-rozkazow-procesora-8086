@@ -20,13 +20,16 @@ export const OperationHistory: React.FC = () => {
 				return `${op.operation} ${op.register}, ${op.value}                     ${op.type}`;
 			case "PRZYPISZ":
 				return `${op.operation} ${op.register}, ${op.value}                     ${op.type}`;
-			case "XCHG":
-				return `${op.operation} ${op.register}, ${op.secondRegister}                              ${op.type}`;
-			case "MOV":
-				if (op.pointer) {
-					return `${op.operation} [${op.pointer}], ${op.register}                      ${op.type}`;
-				}
-				return `${op.operation} ${op.register}, ${op.secondRegister}                               ${op.type}`;
+			case "RESET":
+				return `${op.operation} ${op.register}, ${op.value}                     ${op.type}`;
+			case "MOV_TO_MEMORY":
+				// Format: MOV [BX+308B], AX                     MOV
+				return `${op.operation} [${op.pointer}], ${op.register}                      MOV`;
+			case "MOV_FROM_MEMORY":
+				// Format: MOV AX, [BX+308B]                     MOV
+				return `${op.operation} ${op.register}, [${op.pointer}]                      MOV`;
+			case "XCHG_MEMORY":
+				return `${op.operation} ${op.register}, [${op.pointer}]                      XCHG`;
 			default:
 				return "";
 		}

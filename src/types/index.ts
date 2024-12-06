@@ -30,12 +30,18 @@ export interface Operation {
 	type: string; // RANDOM, PRZYPISZ, XCHG, MOV, itp.
 	timestamp: number;
 }
-
+export interface MemoryCell {
+	address: number;
+	value: string;
+	calculation?: {
+		addressCalculation: string;
+		valueSource: string;
+	};
+}
 export interface Memory {
 	cells: string[];
-	displayedCells: { address: number; value: string }[];
+	displayedCells: MemoryCell[];
 }
-
 export interface Stack {
 	values: string[];
 	pointer: number;
