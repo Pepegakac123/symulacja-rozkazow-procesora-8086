@@ -5,9 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { isValidHexValue } from "../utils/validation";
+import AddressRegisterAssignmentDialog from "./AddressRegisterAssignmentDialog";
 import {
-	updateAddressRegister,
 	setRandomAddressValues,
 	resetAddressRegisters,
 	generateRandomAddressValues,
@@ -17,23 +16,6 @@ import { addOperation } from "../store/slices/operationsSlice";
 export const AddressRegisters: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const addressRegisters = useAppSelector((state) => state.addressRegisters);
-
-	const handleRegisterChange = (
-		register: keyof typeof addressRegisters,
-		value: string,
-	) => {
-		if (isValidHexValue(value)) {
-			dispatch(updateAddressRegister({ register, value }));
-			dispatch(
-				addOperation({
-					operation: "MOV",
-					register: register.toUpperCase(),
-					value: value.toUpperCase(),
-					type: "PRZYPISZ",
-				}),
-			);
-		}
-	};
 
 	const handleRandom = () => {
 		const randomValues = generateRandomAddressValues();
@@ -77,21 +59,13 @@ export const AddressRegisters: React.FC = () => {
 					{Object.entries(addressRegisters).map(([reg, { value, label }]) => (
 						<div key={reg} className="mb-4">
 							<Label>{label}</Label>
-							<Input
-								value={value}
-								onChange={(e) =>
-									handleRegisterChange(
-										reg as keyof typeof addressRegisters,
-										e.target.value,
-									)
-								}
-								className="font-mono"
-								maxLength={4}
-							/>
+							<Input value={value} readOnly className="font-mono bg-gray-50" />
 						</div>
 					))}
 
-					<div className="flex gap-2">
+					<div className="flex flex-col gap-2">
+						<AddressRegisterAssignmentDialog />
+
 						<Button onClick={handleRandom} className="w-full">
 							RANDOM
 						</Button>

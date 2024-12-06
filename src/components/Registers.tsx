@@ -13,7 +13,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { isValidHexValue } from "../utils/validation";
+import RegisterAssignmentDialog from "./RegisterAssignmentDialog";
 import {
 	generateRandomValues,
 	registersSlice,
@@ -27,29 +27,9 @@ export const Registers: React.FC = () => {
 	const selectedFromReg = useAppSelector((state) => state.ui.selectedFromReg);
 	const selectedToReg = useAppSelector((state) => state.ui.selectedToReg);
 
-	// Sprawdzanie poprawności wszystkich wartości
 	const areAllValuesValid = useMemo(() => {
-		return Object.values(registers).every(
-			({ value }) => isValidHexValue(value) && value.length === 4,
-		);
+		return Object.values(registers).every(({ value }) => value.length === 4);
 	}, [registers]);
-
-	const handleRegisterChange = (
-		register: keyof typeof registers,
-		value: string,
-	) => {
-		if (isValidHexValue(value)) {
-			dispatch(registersSlice.actions.updateRegister({ register, value }));
-			dispatch(
-				addOperation({
-					operation: "MOV",
-					register: register.toUpperCase(),
-					value: value.toUpperCase(),
-					type: "PRZYPISZ",
-				}),
-			);
-		}
-	};
 
 	const handleRandom = () => {
 		const randomValues = generateRandomValues();
@@ -160,21 +140,13 @@ export const Registers: React.FC = () => {
 				{Object.entries(registers).map(([reg, { value, label }]) => (
 					<div key={reg} className="mb-4">
 						<Label>{label}</Label>
-						<Input
-							value={value}
-							onChange={(e) =>
-								handleRegisterChange(
-									reg as keyof typeof registers,
-									e.target.value,
-								)
-							}
-							className="font-mono"
-							maxLength={4}
-						/>
+						<Input value={value} readOnly className="font-mono bg-gray-50" />
 					</div>
 				))}
 
 				<div className="space-y-2">
+					<RegisterAssignmentDialog />
+
 					<Button onClick={handleRandom} className="w-full">
 						RANDOM
 					</Button>
