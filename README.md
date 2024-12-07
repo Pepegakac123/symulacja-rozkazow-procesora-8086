@@ -1,62 +1,132 @@
+# Symulator rozkazów procesora Intel 8086
+
+## Spis treści
+- [Architektura procesora 8086](#architektura-procesora-8086)
+- [Rejestry](#rejestry)
+  - [Rejestry ogólnego przeznaczenia](#rejestry-ogólnego-przeznaczenia)
+  - [Rejestry wskaźników i indeksów](#rejestry-wskaźników-i-indeksów)
+- [Tryby adresowania](#tryby-adresowania)
+- [Operacje na rejestrach](#operacje-na-rejestrach)
+- [Operacje na pamięci](#operacje-na-pamięci)
+- [Operacje na stosie](#operacje-na-stosie)
+- [Funkcjonalności symulatora](#funkcjonalności-symulatora)
+
 ## Architektura procesora 8086
-Procesor 8086 to jednostka 16 bitowa, co oznacza, że może przetwarzać dane o długości 16 bitów (czyli dwa bajty) w jednej operacji. Pracuje w architekturze CISC (Complex Instruction Set Computing), co oznacza, że obsługuje złożone zestwy instrukcji, kóre mogą wykonywać rożnorodne zadania w jednym rozazie.
+Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długości 16 bitów (dwa bajty) w jednej operacji. Wykorzystuje architekturę CISC (Complex Instruction Set Computing), co oznacza, że posiada rozbudowany zestaw instrukcji pozwalających na wykonywanie złożonych operacji.
 
-## Rejestry ogólnego przeznaczenia:
-- ***AX(Accumulator):*** używany jako akumulator głowny, przechowujący wyniki operacji arytmetycznych, logicznych i przesyłania danych
+## Rejestry
 
-- ***BX(Base Register):*** Używany w adresowaniu bazowym, gdzie wskazuje podstawowy adres w pamięci.
+### Rejestry ogólnego przeznaczenia
+- **AX (Accumulator)**: Główny rejestr akumulatora, używany do operacji arytmetycznych i logicznych
+- **BX (Base Register)**: Rejestr bazowy, często używany w adresowaniu pamięci
+- **CX (Counter)**: Rejestr licznika, używany w operacjach iteracyjnych
+- **DX (Data Register)**: Rejestr danych, pomocniczy w operacjach arytmetycznych
 
-- ***CX(Counter)***: Służy jako licznik, np. do określania liczby powtórzeń w pętlach.
-
-- ***DX(Data Register)***: Wykorzystywany do przechowywania dodatkowych danych, np: w operacjach mnożenia i dzielenia.
-
-## Rejestry segmentowe
-- ***CS(Code Segment):**** Segment kodu, wskazuje miejsce przechowywania kodu programu
-
-- ****DS (Data Segment):**** Segment danych przechowuje dane programu
-
-- ****SS(Stack Segment):**** Segment  stosu, przechowuje stos używany przez PUSH i POP
-
-- ****ES(Extra Semgent):**** Dodatkowy segment, może byc używany do przechowywania danych dodatkowych
-
-## Rejestry wskaźników i indeksów
-- ***SP (Stack Pointer) i BP (Base Pointer):*** Służą do operacji na stosie
-
-- ***SI (Source Index) i DI (Destination Index):*** Stosowane w operacjach przesyłania danych, często przy użyciu trybu adresowania indeksowego
-
-## Rejestr flagowy
-Przechowuje on informację o stanie procesora po wykonaniu instrukcji. Każdy bit tego rejestru pełni określoną rolę:
-
-- ***CF (Carry Flag):*** Informuje o przeniesieniu lub pożyczce w operacjach arytmetycznych
-
-- ***ZF (Zero Flag):*** Informje, czy wnik operacji wynosi zero.
-
-- ***SF (Sign Flag):*** Określa znak wyniku operacji (dodatni lub ujemny)
-
-- ***OF(Overflow Flag):*** Informuje o przepełnieniu
-
-
-
+### Rejestry wskaźników i indeksów
+- **SI (Source Index)**: Rejestr indeksu źródłowego
+- **DI (Destination Index)**: Rejestr indeksu docelowego
+- **BP (Base Pointer)**: Wskaźnik bazowy, używany w operacjach stosowych
+- **SP (Stack Pointer)**: Wskaźnik stosu, wskazuje na szczyt stosu
 
 ## Tryby adresowania
-W procesorze 8086 dostępne są rożne tryby adresowania, czyli sposoby określania, gdzie przechowywane są dane w pamięci
+W procesorze 8086 występują różne tryby adresowania, które określają sposób dostępu do danych w pamięci:
 
-### Adresowanie Bezpośrednie
-W adresowaniu bezpośrednim procesor 8086 odwołuje się do konkretnego adresu w pamięci. Instrukcja zawiera stała wartość offsetu, który mówi procesorowi dokładnie, gdzie ma sięgnąć w pamięci.
-
-```Assembly
-MOV AX, [0050h]
+### 1. Tryb indeksowy
+Używa rejestrów SI lub DI plus przesunięcie (DISP):
+```assembly
+; Przykład: [SI + 1234h]
+MOV AX, [SI + 1234h]  ; Pobiera wartość z pamięci spod adresu SI + 1234h do AX
 ```
-- Tutaj `AX` zostaje załadowany wartością z pamięci znajdującej sie pod adresem `DS:0050h`
-- Jeśli `DS = 2000h`, pełny adres to `20000h + 0050h = 20050h`
-- `AX` pobiera zawartość z tego adresu
 
-### Adresowanie Rejestrowe
-W adresowaniu rejestrowym operujemy wyłącznie na rejestrach, co oznacza że dane nie są pobierane ani zapisywane do pamięci, ale przetwarzane bezpośrednio w rejestrach procesora.
-```Assembly
-MOV AX, BX
+### 2. Tryb bazowy
+Wykorzystuje rejestry BX lub BP plus przesunięcie:
+```assembly
+; Przykład: [BX + 5678h]
+MOV AX, [BX + 5678h]  ; Pobiera wartość z pamięci spod adresu BX + 5678h do AX
 ```
-- W tym przypadku `AX` przyjmuje wartość `BX`
-- Jeśli `BX = 1234h`, to po wykonaniu `AX = 1234h`
-- Ta operacja jest szybka, poniewaz odbywa się wyłącznie na rejestrach bez dostępu do pamięci
 
+### 3. Tryb indeksowo-bazowy
+Łączy rejestr indeksowy (SI/DI) z rejestrem bazowym (BX/BP) plus przesunięcie:
+```assembly
+; Przykład: [SI + BX + 1000h]
+MOV AX, [SI + BX + 1000h]  ; Pobiera wartość z adresu SI + BX + 1000h do AX
+```
+
+## Operacje na rejestrach
+
+### MOV (przeniesienie)
+Kopiuje wartość z jednego rejestru do drugiego:
+```assembly
+MOV AX, BX  ; Kopiuje wartość z BX do AX
+```
+
+### XCHG (wymiana)
+Zamienia wartości między dwoma rejestrami:
+```assembly
+XCHG AX, BX  ; Zamienia wartości między AX i BX
+```
+
+[Zdjęcie operacji na rejestrach]
+
+## Operacje na pamięci
+Symulator umożliwia wykonywanie operacji przenoszenia (MOV) i wymiany (XCHG) między rejestrami a pamięcią z wykorzystaniem różnych trybów adresowania.
+
+### Przykłady:
+```assembly
+MOV [SI + 1234h], AX  ; Zapisuje wartość z AX do pamięci
+MOV BX, [DI + 5678h]  ; Pobiera wartość z pamięci do BX
+XCHG AX, [BX + 1000h] ; Wymienia wartość między AX a pamięcią
+```
+
+[Zdjęcie operacji na pamięci]
+
+## Operacje na stosie
+Stos to specjalna struktura danych typu LIFO (Last In, First Out), gdzie operacje wykonywane są na zasadzie "ostatni na wejściu, pierwszy na wyjściu".
+
+### PUSH (włożenie na stos)
+```assembly
+PUSH AX  ; Odkłada wartość z AX na stos
+```
+- Zmniejsza SP o 2
+- Zapisuje wartość na szczycie stosu
+
+### POP (zdjęcie ze stosu)
+```assembly
+POP BX  ; Pobiera wartość ze stosu do BX
+```
+- Pobiera wartość ze szczytu stosu
+- Zwiększa SP o 2
+
+[Zdjęcie operacji na stosie]
+
+## Funkcjonalności symulatora
+
+### 1. Panel rejestrów
+- Wyświetlanie i modyfikacja wartości rejestrów
+- Operacje MOV i XCHG między rejestrami
+- Generowanie losowych wartości
+- Resetowanie wartości
+
+[Zdjęcie panelu rejestrów]
+
+### 2. Operacje pamięci
+- Wybór trybu adresowania
+- Operacje MOV i XCHG między rejestrami a pamięcią
+- Podgląd zawartości pamięci
+- Obliczanie efektywnego adresu
+
+[Zdjęcie operacji pamięci]
+
+### 3. Operacje na stosie
+- Operacje PUSH i POP
+- Wyświetlanie wskaźnika stosu (SP)
+- Podgląd zawartości stosu
+
+[Zdjęcie operacji na stosie]
+
+### 4. Historia operacji
+- Rejestrowanie wszystkich wykonanych operacji
+- Wyświetlanie w formacie asemblera
+- Możliwość wyczyszczenia historii
+
+[Zdjęcie historii operacji]
