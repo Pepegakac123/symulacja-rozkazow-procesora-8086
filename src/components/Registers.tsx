@@ -131,6 +131,12 @@ export const Registers: React.FC = () => {
 		}
 	};
 
+	// Przygotowanie etykiet z wartościami dla selectów
+	const getRegisterLabel = (label: string) => {
+		const reg = label.toLowerCase() as keyof typeof registers;
+		return `${label} [${registers[reg].value}]`;
+	};
+
 	return (
 		<Card>
 			<CardHeader>
@@ -156,28 +162,28 @@ export const Registers: React.FC = () => {
 
 					<div className="flex gap-2">
 						<Select value={selectedFromReg} onValueChange={handleFromRegChange}>
-							<SelectTrigger>
+							<SelectTrigger className="font-mono">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
 								{Object.values(registers).map(({ label }) => (
-									<SelectItem key={label} value={label}>
-										{label}
+									<SelectItem key={label} value={label} className="font-mono">
+										{getRegisterLabel(label)}
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
 
 						<Select value={selectedToReg} onValueChange={handleToRegChange}>
-							<SelectTrigger>
+							<SelectTrigger className="font-mono">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
 								{Object.values(registers)
 									.filter(({ label }) => label !== selectedFromReg)
 									.map(({ label }) => (
-										<SelectItem key={label} value={label}>
-											{label}
+										<SelectItem key={label} value={label} className="font-mono">
+											{getRegisterLabel(label)}
 										</SelectItem>
 									))}
 							</SelectContent>
