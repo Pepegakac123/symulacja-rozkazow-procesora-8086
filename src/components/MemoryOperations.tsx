@@ -31,10 +31,41 @@ import {
 import { HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export const MemoryOperations: React.FC = () => {
+const MemoryCell: React.FC<{
+	address: number;
+	value: string;
+	calculation?: {
+	  addressCalculation: string;
+	  valueSource: string;
+	};
+  }> = ({ address, value, calculation }) => (
+	<div className="text-sm font-mono flex items-center gap-2">
+	  <span>
+		{address.toString(16).toUpperCase().padStart(4, "0")}: {value}
+	  </span>
+	  {calculation && (
+		<Tooltip>
+		  <TooltipTrigger>
+			<HelpCircle className="h-4 w-4 text-muted-foreground" />
+		  </TooltipTrigger>
+		  <TooltipContent className="max-w-[300px]">
+			<div className="space-y-2">
+			  <p>
+				<strong>Adres:</strong> {calculation.addressCalculation}
+			  </p>
+			  <p>
+				<strong>Wartość:</strong> {calculation.valueSource}
+			  </p>
+			</div>
+		  </TooltipContent>
+		</Tooltip>
+	  )}
+	</div>
+  );
+  export const MemoryOperations: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const { toast } = useToast();
-
+  
 	const memory = useAppSelector((state) => state.memory);
 	const registers = useAppSelector((state) => state.registers);
 	const addressRegisters = useAppSelector((state) => state.addressRegisters);
@@ -250,11 +281,11 @@ export const MemoryOperations: React.FC = () => {
 	// Reszta kodu komponentu (JSX) pozostaje bez zmian
 	return (
 		<Card>
-			<CardHeader>
-				<CardTitle>Operacje pamięci</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<div className="space-y-4">
+      <CardHeader>
+        <CardTitle>Operacje pamięci</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
 					{/* Kierunek operacji */}
 					<div className="space-y-2">
 						<Label>Kierunek operacji:</Label>
@@ -388,44 +419,22 @@ export const MemoryOperations: React.FC = () => {
 
 					{/* Podgląd pamięci */}
 					<div>
-						<Label>Podgląd pamięci:</Label>
-						<div className="h-48 overflow-y-auto border rounded p-2">
-							{memory.displayedCells.map(({ address, value, calculation }) => (
-								<div
-									key={address}
-									className="text-sm font-mono flex items-center gap-2"
-								>
-									<span>
-										{address.toString(16).toUpperCase().padStart(4, "0")}:{" "}
-										{value}
-									</span>
-									{calculation && (
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger>
-													<HelpCircle className="h-4 w-4 text-muted-foreground" />
-												</TooltipTrigger>
-												<TooltipContent className="max-w-[300px]">
-													<div className="space-y-2">
-														<p>
-															<strong>Adres:</strong>{" "}
-															{calculation.addressCalculation}
-														</p>
-														<p>
-															<strong>Wartość:</strong>{" "}
-															{calculation.valueSource}
-														</p>
-													</div>
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-									)}
-								</div>
-							))}
-						</div>
-					</div>
-				</div>
-			</CardContent>
-		</Card>
+            <Label>Podgląd pamięci:</Label>
+            <TooltipProvider>
+              <div className="h-48 overflow-y-auto border rounded p-2">
+                {memory.displayedCells.map((cell) => (
+                  <MemoryCell
+                    key={cell.address}
+                    address={cell.address}
+                    value={cell.value}
+                    calculation={cell.calculation}
+                  />
+                ))}
+              </div>
+            </TooltipProvider>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
 	);
 };
