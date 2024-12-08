@@ -29,6 +29,52 @@ Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długośc
 - **BP (Base Pointer)**: Wskaźnik bazowy, używany w operacjach stosowych
 - **SP (Stack Pointer)**: Wskaźnik stosu, wskazuje na szczyt stosu
 
+## Funkcjonalności symulatora
+
+### 1. Panel rejestrów
+- Wyświetlanie i modyfikacja wartości rejestrów
+- Operacje MOV i XCHG między rejestrami
+- Generowanie losowych wartości
+- Resetowanie wartości
+
+[Zdjęcie panelu rejestrów]
+
+### 2. Operacje pamięci
+- Wybór trybu adresowania
+- Operacje MOV i XCHG między rejestrami a pamięcią
+- Podgląd zawartości pamięci
+- Obliczanie efektywnego adresu
+
+[Zdjęcie operacji pamięci]
+
+### 3. Operacje na stosie
+- Operacje PUSH i POP
+- Wyświetlanie wskaźnika stosu (SP)
+- Podgląd zawartości stosu
+
+[Zdjęcie operacji na stosie]
+
+### 4. Historia operacji
+- Rejestrowanie wszystkich wykonanych operacji
+- Wyświetlanie w formacie asemblera
+- Możliwość wyczyszczenia historii
+
+[Zdjęcie historii operacji]
+
+## Operacje na rejestrach
+
+### MOV (przeniesienie)
+Kopiuje wartość z jednego rejestru do drugiego:
+```assembly
+MOV AX, BX  ; Kopiuje wartość z BX do AX
+```
+
+### XCHG (wymiana)
+Zamienia wartości między dwoma rejestrami:
+```assembly
+XCHG AX, BX  ; Zamienia wartości między AX i BX
+```
+
 ## Tryby adresowania
 W procesorze 8086 występują różne tryby adresowania, które określają sposób dostępu do danych w pamięci:
 
@@ -52,21 +98,6 @@ MOV AX, [BX + 5678h]  ; Pobiera wartość z pamięci spod adresu BX + 5678h do A
 ; Przykład: [SI + BX + 1000h]
 MOV AX, [SI + BX + 1000h]  ; Pobiera wartość z adresu SI + BX + 1000h do AX
 ```
-
-## Operacje na rejestrach
-
-### MOV (przeniesienie)
-Kopiuje wartość z jednego rejestru do drugiego:
-```assembly
-MOV AX, BX  ; Kopiuje wartość z BX do AX
-```
-
-### XCHG (wymiana)
-Zamienia wartości między dwoma rejestrami:
-```assembly
-XCHG AX, BX  ; Zamienia wartości między AX i BX
-```
-
 [Zdjęcie operacji na rejestrach]
 
 ## Operacje na pamięci
@@ -100,34 +131,4 @@ POP BX  ; Pobiera wartość ze stosu do BX
 
 [Zdjęcie operacji na stosie]
 
-## Funkcjonalności symulatora
 
-### 1. Panel rejestrów
-- Wyświetlanie i modyfikacja wartości rejestrów
-- Operacje MOV i XCHG między rejestrami
-- Generowanie losowych wartości
-- Resetowanie wartości
-
-[Zdjęcie panelu rejestrów]
-
-### 2. Operacje pamięci
-- Wybór trybu adresowania
-- Operacje MOV i XCHG między rejestrami a pamięcią
-- Podgląd zawartości pamięci
-- Obliczanie efektywnego adresu
-
-[Zdjęcie operacji pamięci]
-
-### 3. Operacje na stosie
-- Operacje PUSH i POP
-- Wyświetlanie wskaźnika stosu (SP)
-- Podgląd zawartości stosu
-
-[Zdjęcie operacji na stosie]
-
-### 4. Historia operacji
-- Rejestrowanie wszystkich wykonanych operacji
-- Wyświetlanie w formacie asemblera
-- Możliwość wyczyszczenia historii
-
-[Zdjęcie historii operacji]
