@@ -80,7 +80,7 @@ Zamienia wartości między dwoma rejestrami:
 XCHG CX, DX  ; Zamienia wartości między CX i DX
 ```
 #### Przed Operacją
-![Przed Operacją XCHG](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images//xchg/before.png)
+![Przed Operacją XCHG](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/xchg/before.png)
 
 #### Po Operacji
 ![Po Operacji XCHG](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/xchg/after.png)
