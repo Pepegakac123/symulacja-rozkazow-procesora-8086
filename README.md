@@ -5,11 +5,12 @@
 - [Rejestry](#rejestry)
   - [Rejestry ogólnego przeznaczenia](#rejestry-ogólnego-przeznaczenia)
   - [Rejestry wskaźników i indeksów](#rejestry-wskaźników-i-indeksów)
-- [Tryby adresowania](#tryby-adresowania)
+- [Funkcjonalności symulatora](#funkcjonalności-symulatora)
 - [Operacje na rejestrach](#operacje-na-rejestrach)
+- [Tryby adresowania](#tryby-adresowania)
 - [Operacje na pamięci](#operacje-na-pamięci)
 - [Operacje na stosie](#operacje-na-stosie)
-- [Funkcjonalności symulatora](#funkcjonalności-symulatora)
+
 
 ## Architektura procesora 8086
 Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długości 16 bitów (dwa bajty) w jednej operacji. Wykorzystuje architekturę CISC (Complex Instruction Set Computing), co oznacza, że posiada rozbudowany zestaw instrukcji pozwalających na wykonywanie złożonych operacji.
