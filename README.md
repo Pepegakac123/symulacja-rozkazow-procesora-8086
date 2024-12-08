@@ -40,14 +40,14 @@ MOV AX, [SI + 1234h]  ; Pobiera wartość z pamięci spod adresu SI + 1234h do A
 ```
 
 ### 2. Tryb bazowy
-Wykorzystuje rejestry BX lub BP plus przesunięcie:
+Wykorzystuje rejestry BX lub BP plus przesunięcie (DISP):
 ```assembly
 ; Przykład: [BX + 5678h]
 MOV AX, [BX + 5678h]  ; Pobiera wartość z pamięci spod adresu BX + 5678h do AX
 ```
 
 ### 3. Tryb indeksowo-bazowy
-Łączy rejestr indeksowy (SI/DI) z rejestrem bazowym (BX/BP) plus przesunięcie:
+Łączy rejestr indeksowy (SI/DI) z rejestrem bazowym (BX/BP) plus przesunięcie (DISP):
 ```assembly
 ; Przykład: [SI + BX + 1000h]
 MOV AX, [SI + BX + 1000h]  ; Pobiera wartość z adresu SI + BX + 1000h do AX
