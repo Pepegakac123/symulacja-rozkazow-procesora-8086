@@ -69,13 +69,21 @@ Kopiuje wartość z jednego rejestru do drugiego:
 ```assembly
 MOV AX, BX  ; Kopiuje wartość z BX do AX
 ```
+#### Przed Operacją
+![Przed Operacją MOV](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images//mov/before.png)
 
+#### Po Operacji
+![Po Operacji MOV](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/mov/after.png)
 ### XCHG (wymiana)
 Zamienia wartości między dwoma rejestrami:
 ```assembly
-XCHG AX, BX  ; Zamienia wartości między AX i BX
+XCHG CX, DX  ; Zamienia wartości między CX i DX
 ```
+#### Przed Operacją
+![Przed Operacją XCHG](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images//xchg/before.png)
 
+#### Po Operacji
+![Po Operacji XCHG](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/xchg/after.png)
 ## Tryby adresowania
 W procesorze 8086 występują różne tryby adresowania, które określają sposób dostępu do danych w pamięci:
 
