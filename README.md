@@ -90,27 +90,36 @@ W procesorze 8086 występują różne tryby adresowania, które określają spos
 ### 1. Tryb indeksowy
 Używa rejestrów SI lub DI plus przesunięcie (DISP):
 ```assembly
-; Przykład: [SI + 1234h]
-MOV AX, [SI + 1234h]  ; Pobiera wartość z pamięci spod adresu SI + 1234h do AX
+; Przykład: [SI + DISP]
+MOV [SI + DISP], AX  ; Pobiera wartość do pamięci spod adresu SI + DISP i zapisuje pod tym adresem wartość rejestru AX
 ```
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/indeksowy/to-memory.png)
 
 ### 2. Tryb bazowy
 Wykorzystuje rejestry BX lub BP plus przesunięcie (DISP):
 ```assembly
-; Przykład: [BX + 5678h]
-MOV AX, [BX + 5678h]  ; Pobiera wartość z pamięci spod adresu BX + 5678h do AX
+; Przykład: [BX + DISP]
+MOV [BX + DISP], CX  ; Pobiera wartość do pamięci spod adresu BX + DISP i zapisuje pod tym adresem wartość rejestru CX
 ```
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/bazowy/to-memory.png)
 
 ### 3. Tryb indeksowo-bazowy
 Łączy rejestr indeksowy (SI/DI) z rejestrem bazowym (BX/BP) plus przesunięcie (DISP):
 ```assembly
-; Przykład: [SI + BX + 1000h]
-MOV AX, [SI + BX + 1000h]  ; Pobiera wartość z adresu SI + BX + 1000h do AX
+; Przykład: [SI + BX + DISP]
+MOV [SI + BX + DISP], DX  ; Pobiera wartość do pamięci spod adresu SI + BX + DISP i zapisuje pod tym adresem wartość rejestru DX
 ```
-[Zdjęcie operacji na rejestrach]
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/indeksowy-bazowy/to-memory.png)
 
-## Operacje na pamięci
-Symulator umożliwia wykonywanie operacji przenoszenia (MOV) i wymiany (XCHG) między rejestrami a pamięcią z wykorzystaniem różnych trybów adresowania.
+## Operacje zapisywania z pamięci do rejestru
+
+### Przypisanie wartości rejestru z pamięci na przykładzie trybu indeksowo-bazowego
+; Przykład: [SI + BX + DISP]
+MOV AX, [SI + BX + DISP]  ; Pobiera wartość z pamięci spod adresu SI + BX + DISP i przypisuje znajdującą się pod tym adresem wartość
+```
 
 ### Przykłady:
 ```assembly
