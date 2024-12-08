@@ -37,7 +37,7 @@ Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długośc
 - Generowanie losowych wartości
 - Resetowanie wartości
 
-[Zdjęcie panelu rejestrów]
+![alt text](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/)
 
 ### 2. Operacje pamięci
 - Wybór trybu adresowania
