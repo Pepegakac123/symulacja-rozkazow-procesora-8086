@@ -1,5 +1,5 @@
 # Symulator rozkazów procesora Intel 8086
-
+![Obraz Symulatora](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/main-simulator.png)
 ## Spis treści
 - [Architektura procesora 8086](#architektura-procesora-8086)
 - [Rejestry](#rejestry)
@@ -10,6 +10,7 @@
 - [Tryby adresowania](#tryby-adresowania)
 - [Operacje na pamięci](#operacje-na-pamięci)
 - [Operacje na stosie](#operacje-na-stosie)
+
 
 
 ## Architektura procesora 8086
@@ -45,21 +46,21 @@ Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długośc
 - Podgląd zawartości pamięci
 - Obliczanie efektywnego adresu
 
-[Zdjęcie operacji pamięci]
+![Operacje pamięci](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/address-registers.png)
 
 ### 3. Operacje na stosie
 - Operacje PUSH i POP
 - Wyświetlanie wskaźnika stosu (SP)
 - Podgląd zawartości stosu
 
-[Zdjęcie operacji na stosie]
+![Operacje na stosie](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/stack.png)
 
 ### 4. Historia operacji
 - Rejestrowanie wszystkich wykonanych operacji
 - Wyświetlanie w formacie asemblera
 - Możliwość wyczyszczenia historii
 
-[Zdjęcie historii operacji]
+![Historia operacji](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/operation-history.png)
 
 ## Operacje na rejestrach
 
