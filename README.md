@@ -62,7 +62,7 @@ Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długośc
 
 ![Historia operacji](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/operation-history.png)
 
-## Operacje na rejestrach
+## Operacje zapisywania z rejestru do pamięci
 
 ### MOV (przeniesienie)
 Kopiuje wartość z jednego rejestru do drugiego:
@@ -117,28 +117,33 @@ MOV [SI + BX + DISP], DX  ; Pobiera wartość do pamięci spod adresu SI + BX + 
 ## Operacje zapisywania z pamięci do rejestru
 
 ### Przypisanie wartości rejestru z pamięci na przykładzie trybu indeksowo-bazowego
-; Przykład: [SI + BX + DISP]
+Przykład: [SI + BX + DISP]
 MOV AX, [SI + BX + DISP]  ; Pobiera wartość z pamięci spod adresu SI + BX + DISP i przypisuje znajdującą się pod tym adresem wartość
-```
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/indeksowy-bazowy/from-memory.png)```
+## Operacje zamiany wartości pomiędzy pamięcią a rejestrem
 
-### Przykłady:
 ```assembly
-MOV [SI + 1234h], AX  ; Zapisuje wartość z AX do pamięci
-MOV BX, [DI + 5678h]  ; Pobiera wartość z pamięci do BX
-XCHG AX, [BX + 1000h] ; Wymienia wartość między AX a pamięcią
+Przykład: XCHG BX, [SI + DISP] ; Wymienia wartość między BX a wartością zapisana w pamięci pod danym adresem
 ```
-
-[Zdjęcie operacji na pamięci]
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/indeksowy/xchg.png)
 
 ## Operacje na stosie
 Stos to specjalna struktura danych typu LIFO (Last In, First Out), gdzie operacje wykonywane są na zasadzie "ostatni na wejściu, pierwszy na wyjściu".
 
+**SP (Stack Pointer)** - wskaźnik stosu pokazujący aktualną pozycję na szczycie stosu. Wartość 0 oznacza, że następna operacja PUSH zapisze dane pod tym adresem. SP zwiększa się o 2 przy każdej operacji POP i zmniejsza o 2 przy PUSH (każda wartość na stosie zajmuje 2 bajty).
+
 ### PUSH (włożenie na stos)
 ```assembly
 PUSH AX  ; Odkłada wartość z AX na stos
+PUSH CX ; Odkłada wartość z CX na stos
 ```
 - Zmniejsza SP o 2
 - Zapisuje wartość na szczycie stosu
+
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/stos/push.png)
 
 ### POP (zdjęcie ze stosu)
 ```assembly

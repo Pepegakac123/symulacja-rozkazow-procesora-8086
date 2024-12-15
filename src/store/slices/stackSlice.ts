@@ -3,7 +3,7 @@ import type { Stack } from "../../types";
 
 const initialState: Stack = {
 	values: [],
-	pointer: 0,
+	pointer: 65534, // Zaczynamy od góry stosu
 };
 
 export const stackSlice = createSlice({
@@ -12,14 +12,13 @@ export const stackSlice = createSlice({
 	reducers: {
 		push: (state, action: PayloadAction<string>) => {
 			const registerValue = action.payload;
-			// Push value to stack (2 bytes at a time)
 			state.values.unshift(registerValue);
-			state.pointer += 2;
+			state.pointer -= 2; // Zmniejszamy SP przy PUSH
 		},
 		pop: (state) => {
 			if (state.values.length > 0) {
 				state.values.shift();
-				state.pointer -= 2;
+				state.pointer += 2; // Zwiększamy SP przy POP
 			}
 		},
 		resetStack: () => initialState,
