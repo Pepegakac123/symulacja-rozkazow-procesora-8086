@@ -44,6 +44,7 @@ Procesor 8086 to jednostka 16-bitowa, która może przetwarzać dane o długośc
 - **DI (Destination Index)**: Rejestr indeksu docelowego
 - **BP (Base Pointer)**: Wskaźnik bazowy, używany w operacjach stosowych
 - **SP (Stack Pointer)**: Wskaźnik stosu, wskazuje na szczyt stosu
+- **DISP (Displacement)/offset**: Przesunięcie, wartość określająca offset względem adresu bazowego lub indeksowego, używana do precyzyjnego adresowania pamięci
 
 ## Funkcjonalności symulatora
 
