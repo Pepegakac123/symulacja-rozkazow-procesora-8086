@@ -152,6 +152,7 @@ POP BX  ; Pobiera wartość ze stosu do BX
 - Pobiera wartość ze szczytu stosu
 - Zwiększa SP o 2
 
-[Zdjęcie operacji na stosie]
+#### Po Operacji
+![Po Operacji ](https://github.com/Pepegakac123/symulacja-rozkazow-procesora-8086/blob/main/public/images/stos/pop.png)
 
 
