@@ -31,41 +31,55 @@ import {
 import { HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+/**
+ * Komponent MemoryCell - wyświetla pojedynczą komórkę pamięci
+ * wraz z szczegółami adresowania i źródłem wartości
+ */
 const MemoryCell: React.FC<{
 	address: number;
 	value: string;
 	calculation?: {
-	  addressCalculation: string;
-	  valueSource: string;
+		addressCalculation: string;
+		valueSource: string;
 	};
-  }> = ({ address, value, calculation }) => (
+}> = ({ address, value, calculation }) => (
 	<div className="text-sm font-mono flex items-center gap-2">
-	  <span>
-		{address.toString(16).toUpperCase().padStart(4, "0")}: {value}
-	  </span>
-	  {calculation && (
-		<Tooltip>
-		  <TooltipTrigger>
-			<HelpCircle className="h-4 w-4 text-muted-foreground" />
-		  </TooltipTrigger>
-		  <TooltipContent className="max-w-[300px]">
-			<div className="space-y-2">
-			  <p>
-				<strong>Adres:</strong> {calculation.addressCalculation}
-			  </p>
-			  <p>
-				<strong>Wartość:</strong> {calculation.valueSource}
-			  </p>
-			</div>
-		  </TooltipContent>
-		</Tooltip>
-	  )}
+		<span>
+			{/* Wyświetlanie adresu w formacie szesnastkowym i wartości */}
+			{address.toString(16).toUpperCase().padStart(4, "0")}: {value}
+		</span>
+		{calculation && (
+			<Tooltip>
+				<TooltipTrigger>
+					<HelpCircle className="h-4 w-4 text-muted-foreground" />
+				</TooltipTrigger>
+				<TooltipContent className="max-w-[300px]">
+					<div className="space-y-2">
+						<p>
+							<strong>Adres:</strong> {calculation.addressCalculation}
+						</p>
+						<p>
+							<strong>Wartość:</strong> {calculation.valueSource}
+						</p>
+					</div>
+				</TooltipContent>
+			</Tooltip>
+		)}
 	</div>
-  );
-  export const MemoryOperations: React.FC = () => {
+);
+
+/**
+ * Komponent MemoryOperations - implementuje operacje pamięciowe procesora Intel 8086
+ * Obsługuje różne tryby adresowania:
+ * - Indeksowy (SI/DI)
+ * - Bazowy (BX/BP)
+ * - Indeksowo-bazowy (kombinacje SI/DI + BX/BP)
+ */
+export const MemoryOperations: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const { toast } = useToast();
-  
+
+	// Pobieranie stanów z Redux store
 	const memory = useAppSelector((state) => state.memory);
 	const registers = useAppSelector((state) => state.registers);
 	const addressRegisters = useAppSelector((state) => state.addressRegisters);
@@ -74,10 +88,21 @@ const MemoryCell: React.FC<{
 	const selectedReg = useAppSelector((state) => state.ui.selectedFromReg);
 	const selectedBaseReg = useAppSelector((state) => state.ui.selectedBaseReg);
 
+	/**
+	 * Sprawdza poprawność wartości przesunięcia (DISP)
+	 * @param disp - wartość przesunięcia w formacie szesnastkowym
+	 */
 	const isValidDisp = (disp: string): boolean => {
 		return /^[0-9A-F]{4}$/.test(disp.toUpperCase());
 	};
 
+	/**
+	 * Zwraca listę dostępnych rejestrów dla wybranego trybu adresowania
+	 * Tryby:
+	 * - indeksowy: SI, DI
+	 * - bazowy: BX, BP
+	 * - indeksowo-bazowy: kombinacje SI/DI + BX/BP
+	 */
 	const getAvailableRegisters = () => {
 		switch (addressingMode) {
 			case "indexing":
@@ -102,6 +127,13 @@ const MemoryCell: React.FC<{
 		}
 	};
 
+	/**
+	 * Generuje tekstową reprezentację sposobu adresowania
+	 * Przykłady:
+	 * - Indeksowy: "SI+1234"
+	 * - Bazowy: "BX+1234"
+	 * - Indeksowo-bazowy: "SI+BX+1234"
+	 */
 	const getAddressingString = () => {
 		const disp = addressRegisters.disp.value;
 		switch (addressingMode) {
@@ -118,6 +150,15 @@ const MemoryCell: React.FC<{
 		}
 	};
 
+	/**
+	 * Oblicza efektywny adres pamięci na podstawie wybranego trybu adresowania
+	 * Uwzględnia:
+	 * - Wartości rejestrów indeksowych (SI/DI)
+	 * - Wartości rejestrów bazowych (BX/BP)
+	 * - Wartość przesunięcia (DISP)
+	 *
+	 * @returns obliczony adres pamięci lub -1 w przypadku błędu
+	 */
 	const calculateEffectiveAddress = (): number => {
 		if (!isValidDisp(addressRegisters.disp.value)) {
 			return -1;
@@ -157,6 +198,12 @@ const MemoryCell: React.FC<{
 		}
 	};
 
+	/**
+	 * Obsługa operacji MOV między pamięcią a rejestrem
+	 * Dwa kierunki:
+	 * - Z rejestru do pamięci (toMemory)
+	 * - Z pamięci do rejestru (fromMemory)
+	 */
 	const handleMOV = () => {
 		const effectiveAddress = calculateEffectiveAddress();
 		if (effectiveAddress === -1) {
@@ -172,6 +219,7 @@ const MemoryCell: React.FC<{
 			selectedReg.toLowerCase() as keyof typeof registers;
 
 		if (direction === "toMemory") {
+			// Przenoszenie wartości z rejestru do pamięci
 			const value = registers[selectedRegister].value;
 			dispatch(
 				memorySlice.actions.writeToMemory({
@@ -194,6 +242,7 @@ const MemoryCell: React.FC<{
 				}),
 			);
 		} else {
+			// Przenoszenie wartości z pamięci do rejestru
 			const memoryValue = memory.cells[effectiveAddress];
 
 			if (memoryValue === "00") {
@@ -224,6 +273,10 @@ const MemoryCell: React.FC<{
 		}
 	};
 
+	/**
+	 * Obsługa operacji XCHG między pamięcią a rejestrem
+	 * Zamienia wartości między wybranym rejestrem a komórką pamięci
+	 */
 	const handleXCHG = () => {
 		const effectiveAddress = calculateEffectiveAddress();
 		if (effectiveAddress === -1) {
@@ -249,6 +302,7 @@ const MemoryCell: React.FC<{
 			return;
 		}
 
+		// Zamiana wartości między rejestrem a pamięcią
 		dispatch(
 			memorySlice.actions.writeToMemory({
 				address: effectiveAddress,
@@ -281,11 +335,11 @@ const MemoryCell: React.FC<{
 	// Reszta kodu komponentu (JSX) pozostaje bez zmian
 	return (
 		<Card>
-      <CardHeader>
-        <CardTitle>Operacje pamięci</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+			<CardHeader>
+				<CardTitle>Operacje pamięci</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<div className="space-y-4">
 					{/* Kierunek operacji */}
 					<div className="space-y-2">
 						<Label>Kierunek operacji:</Label>
@@ -419,22 +473,22 @@ const MemoryCell: React.FC<{
 
 					{/* Podgląd pamięci */}
 					<div>
-            <Label>Podgląd pamięci:</Label>
-            <TooltipProvider>
-              <div className="h-48 overflow-y-auto border rounded p-2">
-                {memory.displayedCells.map((cell) => (
-                  <MemoryCell
-                    key={cell.address}
-                    address={cell.address}
-                    value={cell.value}
-                    calculation={cell.calculation}
-                  />
-                ))}
-              </div>
-            </TooltipProvider>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+						<Label>Podgląd pamięci:</Label>
+						<TooltipProvider>
+							<div className="h-48 overflow-y-auto border rounded p-2">
+								{memory.displayedCells.map((cell) => (
+									<MemoryCell
+										key={cell.address}
+										address={cell.address}
+										value={cell.value}
+										calculation={cell.calculation}
+									/>
+								))}
+							</div>
+						</TooltipProvider>
+					</div>
+				</div>
+			</CardContent>
+		</Card>
 	);
 };
